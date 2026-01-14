@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import type { formContact } from './Contact';
 
 type Props = {
@@ -14,6 +14,15 @@ function AddContact({ handleAddContact }: Props) {
     successMessage: '',
   });
 
+  const [formData, setFormData] = useState<formContact>({ name: '', email: '', phone: '' });
+
+  function handleFormInputChange(e: ChangeEvent<HTMLInputElement>) {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  }
+
   function handleAddContactForm(formData: FormData) {
     const contactData = {
       name: formData.get('name')?.toString(),
@@ -22,7 +31,6 @@ function AddContact({ handleAddContact }: Props) {
     };
 
     try {
-      console.log(contactData);
       const response = handleAddContact(contactData as formContact);
       if (response.status === 'success') {
         setMessages({ errorMessage: undefined, successMessage: response.msg });
@@ -43,6 +51,8 @@ function AddContact({ handleAddContact }: Props) {
           <div className='col-12 col-md-4 p-1'>
             <input
               name='name'
+              value={formData.name}
+              onChange={handleFormInputChange}
               placeholder='Name...'
               type='text'
               className='form-control form-control-sm'
@@ -51,6 +61,8 @@ function AddContact({ handleAddContact }: Props) {
           <div className='col-12 col-md-4 p-1'>
             <input
               name='email'
+              value={formData.email}
+              onChange={handleFormInputChange}
               placeholder='Email...'
               type='text'
               className='form-control form-control-sm'
@@ -59,6 +71,8 @@ function AddContact({ handleAddContact }: Props) {
           <div className='col-12 col-md-4 p-1'>
             <input
               name='phone'
+              value={formData.phone}
+              onChange={handleFormInputChange}
               placeholder='Phone...'
               type='text'
               className='form-control form-control-sm'

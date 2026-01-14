@@ -46,6 +46,10 @@ function ContactIndex() {
     });
   }
 
+  function handleDeleteAll() {
+    setContactList([]);
+  }
+
   function handleAddContact(newContact: formContact) {
     // validation
     const duplicateRecord = contactList.filter((x) => {
@@ -60,7 +64,7 @@ function ContactIndex() {
 
     const newFinalContact: contact = {
       ...newContact,
-      id: contactList[contactList.length - 1].id + 1,
+      id: contactList.length > 0 ? contactList[contactList.length - 1].id + 1 : 1,
       isFavorite: false,
     };
     setContactList((prev) => {
@@ -74,7 +78,11 @@ function ContactIndex() {
       <div className='py-3'>
         <div className='row py-2'>
           <div className='col-6'>ADD CONTACT</div>
-          <div className='col-6'>REMOVE CONTACT</div>
+          <div className='col-6'>
+            <button onClick={handleDeleteAll} className='btn btn-danger form-control'>
+              Remove All
+            </button>
+          </div>
         </div>
         <div className='py-2'>
           <div className='col-12'>
