@@ -29,6 +29,14 @@ function ContactIndex() {
     },
   ]);
 
+  const [selectedContact, setSelectedContact] = useState<contact | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  function handleUpdateClick(contact: contact) {
+    setSelectedContact(contact);
+    setIsUpdating(true);
+  }
+
   function handleToggleFavorite(contact: contact) {
     setContactList((prev) => {
       return prev.map((obj) => {
@@ -40,6 +48,20 @@ function ContactIndex() {
     });
   }
 
+  function handleUpdateContact(contact: contact) {
+    setContactList((prev) => {
+      return prev.map((obj) => {
+        if (obj.id === contact.id) {
+          return { ...obj, name: contact.name, email: contact.email, phone: contact.phone };
+        }
+        return obj;
+      });
+    });
+    setSelectedContact(null);
+    setIsUpdating(false);
+    return { status: 'success', msg: 'Contact was updated successfully' };
+  }
+
   function handleDeleteContact(id: number) {
     setContactList((prev) => {
       return prev.filter((u) => u.id !== id);
@@ -48,6 +70,11 @@ function ContactIndex() {
 
   function handleDeleteAll() {
     setContactList([]);
+  }
+
+  function handleCancelUpdateContact() {
+    setSelectedContact(null);
+    setIsUpdating(false);
   }
 
   function handleAddContact(newContact: formContact) {
@@ -86,7 +113,13 @@ function ContactIndex() {
         </div>
         <div className='py-2'>
           <div className='col-12'>
-            <AddContact handleAddContact={handleAddContact} />
+            <AddContact
+              handleAddContact={handleAddContact}
+              handleUpdateContact={handleUpdateContact}
+              isUpdating={isUpdating}
+              cancelUpdateContact={handleCancelUpdateContact}
+              selectedContact={selectedContact}
+            />
           </div>
         </div>
         <div className='py-2'>
@@ -94,6 +127,7 @@ function ContactIndex() {
             <FavoriteContacts
               favoriteClick={handleToggleFavorite}
               deleteClick={handleDeleteContact}
+              updateClick={handleUpdateClick}
               contacts={contactList.filter((u) => u.isFavorite === true)}
             />
           </div>
@@ -103,6 +137,7 @@ function ContactIndex() {
             <GeneralContacts
               favoriteClick={handleToggleFavorite}
               deleteClick={handleDeleteContact}
+              updateClick={handleUpdateClick}
               contacts={contactList.filter((u) => u.isFavorite === false)}
             />
           </div>

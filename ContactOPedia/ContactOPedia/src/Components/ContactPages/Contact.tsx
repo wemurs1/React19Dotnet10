@@ -13,9 +13,10 @@ type Props = {
   contact: contact;
   favoriteClick: (contact: contact) => void;
   deleteClick: (id: number) => void;
+  updateClick: (contact: contact) => void;
 };
 
-function Contact({ contact, favoriteClick, deleteClick }: Props) {
+function Contact({ contact, favoriteClick, deleteClick, updateClick }: Props) {
   return (
     <div className='row p-md-2 mb-2' style={{ borderRadius: '10px', border: '1px solid #555' }}>
       <div className='col-2 pt-2 pt-3'>
@@ -43,7 +44,7 @@ function Contact({ contact, favoriteClick, deleteClick }: Props) {
         </button>
       </div>
       <div className='col-3 pt-2'>
-        <button className='btn btn-info btn-sm m-1'>
+        <button onClick={() => updateClick(contact)} className='btn btn-info btn-sm m-1'>
           <i className='bi bi-pencil-square'></i>
         </button>
         <button className='btn btn-danger btn-sm m-1' onClick={() => deleteClick(contact.id)}>
