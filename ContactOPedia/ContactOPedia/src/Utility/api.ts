@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export interface RandomContact {
   results: Result[];
   info: Info;
@@ -88,16 +90,10 @@ export interface Info {
 }
 
 const getRandomUser = async () => {
-  const url = new URL('https://randomuser.me/api/');
+  const url = 'https://randomuser.me/api/';
 
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-
-  const data = (await response.json()) as RandomContact;
-  return data;
+  const response = await axios.get<RandomContact>(url);
+  return response.data;
 };
 
 export default getRandomUser;
