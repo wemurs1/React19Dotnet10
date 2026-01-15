@@ -1,7 +1,11 @@
 import getRandomUser from '../../Utility/api';
 import type { formContact } from './Contact';
 
-function AddRandomContact() {
+type Props = {
+    handleAddRandomContext: (contact:formContact)=>void;
+}
+
+function AddRandomContact({handleAddRandomContext}:Props) {
   const getRandomContact = async () => {
     const response = await getRandomUser();
     if (response && response.results && response.results.length > 0) {
@@ -11,7 +15,7 @@ function AddRandomContact() {
         email: user.email,
         phone: user.phone,
       };
-      console.log(formattedUser);
+      handleAddRandomContext(formattedUser);
     }
   };
 

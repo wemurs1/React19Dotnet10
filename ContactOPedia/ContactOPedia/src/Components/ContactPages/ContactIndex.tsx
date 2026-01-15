@@ -101,11 +101,34 @@ function ContactIndex() {
     return { status: 'success', msg: 'Contact was added successfully' };
   }
 
+  function handleAddRandomContact(newContact: formContact) {
+    // validation
+    const duplicateRecord = contactList.filter((x) => {
+      if (x.name === newContact.name && x.phone === newContact.phone) {
+        return true;
+      }
+    });
+
+    if (duplicateRecord.length > 0) {
+      return { status: 'error', msg: 'Duplicate record' };
+    }
+
+    const newFinalContact: contact = {
+      ...newContact,
+      id: contactList.length > 0 ? contactList[contactList.length - 1].id + 1 : 1,
+      isFavorite: false,
+    };
+    setContactList((prev) => {
+      return prev.concat([newFinalContact]);
+    });
+    return { status: 'success', msg: 'Contact was added successfully' };
+  }
+
   return (
     <div className='container' style={{ minHeight: '85vh' }}>
       <div className='py-3'>
         <div className='row py-2'>
-          <div className='col-6'><AddRandomContact/></div>
+          <div className='col-6'><AddRandomContact handleAddRandomContext={handleAddRandomContact}/></div>
           <div className='col-6'>
             <button onClick={handleDeleteAll} className='btn btn-danger form-control'>
               Remove All
