@@ -65,6 +65,9 @@ function AddContact({
 
       if (response.status === 'success') {
         setMessages({ errorMessage: undefined, successMessage: response.msg });
+        if (!isUpdating) {
+          setFormData({ name: '', email: '', phone: '' });
+        }
       } else {
         setMessages({ errorMessage: response.msg, successMessage: undefined });
       }
