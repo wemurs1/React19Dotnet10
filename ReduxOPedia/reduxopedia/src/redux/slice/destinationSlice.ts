@@ -39,8 +39,11 @@ const desintationSlice = createSlice({
     destinationClicked: (state, action) => {
       state.destinationSelected = action.payload;
     },
+    resetDestinationSlice: (state) => {
+      state.destinationSelected = null;
+    },
   },
 });
 
 export const destinationReducer = desintationSlice.reducer;
-export const { destinationClicked } = desintationSlice.actions;
+export const { destinationClicked, resetDestinationSlice } = desintationSlice.actions;

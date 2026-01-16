@@ -7,6 +7,7 @@ import { store } from './redux/store';
 import Counter from './components/Counter';
 import DestinationList from './components/DestinationList';
 import DestinationFact from './components/DestinationFact';
+import ResetApp from './components/ResetApp';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -15,11 +16,12 @@ createRoot(document.getElementById('root')!).render(
       <div className='d-flex flex-column min-vh-100'>
         <main className='flex-grow-1 row'>
           <div className='col-12'>
+            <ResetApp />
             <Counter />
             <div className='p-3 m-4 border'>
               <h4 className='text-success pb-4 text-center'>Destination List</h4>
               <DestinationList />
-              <DestinationFact/>
+              <DestinationFact />
             </div>
           </div>
         </main>
