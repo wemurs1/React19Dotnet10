@@ -1,6 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+type destination = {
+  name: string;
+  days: number;
+  fact: string;
+};
+
+export type destState = {
+  destinations: destination[];
+  destinationSelected: destination | null;
+};
+
+const initialState: destState = {
   destinations: [
     {
       name: 'Hong Kong',
