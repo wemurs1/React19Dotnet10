@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MangoFusion_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dee9684c845a43c93a2da7d4b6eebb1822eecf18")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a1a3e80982b40a043ac42c712a7270d6e3e81011")]
 [assembly: System.Reflection.AssemblyProductAttribute("MangoFusion_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MangoFusion_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
