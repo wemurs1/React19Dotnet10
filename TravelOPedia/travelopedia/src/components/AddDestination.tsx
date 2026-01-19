@@ -1,16 +1,26 @@
 import { useState } from 'react';
-import { useAddDestinationMutation } from '../api/destinationApi';
+import { useAddDestinationMutation, useGetAllDestinationQuery } from '../api/destinationApi';
 
 function AddDestination() {
   const [newCity, setNewCity] = useState('');
   const [newCountry, setNewCountry] = useState('');
   const [addDestinationMutation, resultObject] = useAddDestinationMutation();
+  const { data: destinations } = useGetAllDestinationQuery();
 
   const handleAddDestination = (formData) => {
     const city = formData.get('city');
     const country = formData.get('country');
 
     console.log('City: ', city, ' Country: ', country);
+
+    const getNextId = () => {
+      if (!destinations || destinations.length === 0) {
+        return 1;
+      }
+      const maxId = Math.max(...destinations.map((dest) => dest.id));
+      return maxId + 1;
+    };
+
     addDestinationMutation({
       id: Math.ceil(Math.random()) * 100,
       city: newCity,
