@@ -1,6 +1,0 @@
-@MangoFusion_API_HostAddress = http://localhost:5187
-
-GET {{MangoFusion_API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
