@@ -106,7 +106,7 @@ public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env
         }
     }
 
-    [HttpPut]
+    [HttpPut("{id:int}")]
     public async Task<ActionResult<ApiResponse>> UpdateMenuItem(int id, [FromForm] MenuItemUpdateDTO menuItemUpdateDTO)
     {
         try
