@@ -178,4 +178,53 @@ public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env
             return BadRequest(_response);
         }
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult<ApiResponse>> DeleteMenuItem(int id)
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                if (id == 0)
+                {
+                    _response.IsSuccess = false;
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
+                MenuItem? menuItemFromDb = await db.MenuItems.FirstOrDefaultAsync(m => m.Id == id);
+                if (menuItemFromDb is null)
+                {
+                    _response.IsSuccess = false;
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+
+                var filePathOldFile = Path.Combine(env.WebRootPath, menuItemFromDb.Image);
+                if (System.IO.File.Exists(filePathOldFile))
+                {
+                    System.IO.File.Delete(filePathOldFile);
+                }
+
+                db.MenuItems.Remove(menuItemFromDb);
+                await db.SaveChangesAsync();
+
+                _response.StatusCode = HttpStatusCode.NoContent;
+                return Ok(_response);
+            }
+            else
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(_response);
+            }
+        }
+        catch (Exception ex)
+        {
+            _response.IsSuccess = false;
+            _response.ErrorMessages = [ex.ToString()];
+            return BadRequest(_response);
+        }
+    }
 }
