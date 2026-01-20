@@ -480,3 +480,4 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+MangoFusion/MangoFusion_API/appsettings.json
