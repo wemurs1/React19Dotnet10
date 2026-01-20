@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MangoFusion_API.Models;
+namespace MangoFusion_API.Models.Dto;
 
-public class MenuItem
+public class MenuItemUpdateDTO
 {
     [Key]
     public int Id { get; set; }
@@ -17,5 +17,5 @@ public class MenuItem
     public double Price { get; set; }
 
     [Required]
-    public string Image { get; set; } = string.Empty;
+    public IFormFile? File { get; set; } = null!;
 }
