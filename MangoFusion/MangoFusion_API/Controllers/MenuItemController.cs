@@ -49,6 +49,10 @@ public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env
             _response.IsSuccess = false;
             return NotFound(_response);
         }
+        List<OrderDetail> orderDetailsWithRating = await db.OrderDetails.Where(o => o.Rating != null && o.MenuItemId == menuItem.Id).ToListAsync();
+        IEnumerable<int> ratings = orderDetailsWithRating.Where(o => o.Rating.HasValue).Select(u => u.Rating!.Value);
+        double avgRating = ratings.Any() ? ratings.Average() : 0;
+        menuItem.Ratings = avgRating;
 
         _response.Result = menuItem;
         _response.StatusCode = HttpStatusCode.OK;
