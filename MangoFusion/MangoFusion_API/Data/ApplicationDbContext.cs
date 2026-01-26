@@ -7,6 +7,8 @@ namespace MangoFusion_API.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<MenuItem> MenuItems { get; set; }
+    public DbSet<OrderHeader> OrderHeaders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
