@@ -15,7 +15,5 @@ public class MenuItemUpdateDTO
 
     [Range(1, 1000)]
     public double Price { get; set; }
-
-    [Required]
-    public IFormFile? File { get; set; } = null!;
+    public IFormFile? File { get; set; }
 }
