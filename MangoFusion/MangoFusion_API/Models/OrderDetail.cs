@@ -24,4 +24,5 @@ public class OrderDetail
 
     [Required]
     public double Price { get; set; }
+    public int? Rating { get; set; } = null;
 }

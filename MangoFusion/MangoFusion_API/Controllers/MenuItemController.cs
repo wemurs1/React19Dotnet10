@@ -14,9 +14,20 @@ public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env
     private readonly ApiResponse _response = new ApiResponse();
 
     [HttpGet]
-    public async Task<IActionResult> GetMenuItems()
+    public async Task<ActionResult<ApiResponse>> GetMenuItems()
     {
-        _response.Result = await db.MenuItems.ToListAsync();
+        List<MenuItem> menuItems = await db.MenuItems.ToListAsync();
+
+        List<OrderDetail> orderDetailsWithRating = await db.OrderDetails.Where(o => o.Rating != null).ToListAsync();
+
+        foreach (var menuItem in menuItems)
+        {
+            IEnumerable<int> ratings = orderDetailsWithRating.Where(o => o.MenuItemId == menuItem.Id && o.Rating.HasValue).Select(u => u.Rating!.Value);
+            double avgRating = ratings.Any() ? ratings.Average() : 0;
+            menuItem.Ratings = avgRating;
+        }
+
+        _response.Result = menuItems;
         _response.StatusCode = HttpStatusCode.OK;
         return Ok(_response);
     }
