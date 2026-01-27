@@ -2,14 +2,17 @@ import { useState, type ChangeEvent } from 'react';
 import MenuItemModal from '../../components/menuItem/MenuItemModal';
 import MenuItemTable from '../../components/menuItem/MenuItemTable';
 import {
+  useCreateMenuItemMutation,
   useGetMenuItemsQuery,
   type MenuItem,
   type MenuItemForm,
 } from '../../store/api/menuItemApi';
+import { toast } from 'react-toastify';
 
 function MenuItemManagement() {
   const { data: menuItems = [] as MenuItem[], isLoading, error, refetch } = useGetMenuItemsQuery();
 
+  const [createMenuItem] = useCreateMenuItemMutation();
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<MenuItemForm>({
@@ -21,11 +24,39 @@ function MenuItemManagement() {
     image: null,
   });
 
-  const handleFormSubmit = (formData: MenuItemForm) => {
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      description: '',
+      specialTag: '',
+      category: '',
+      price: '',
+      image: null,
+    });
+  };
+
+  const handleFormSubmit = async (formData: MenuItemForm) => {
     setIsSubmitting(true);
     try {
       // call api to create
-      console.log(formData);
+      const formDataToSend = new FormData();
+      formDataToSend.append('Name', formData.name);
+      formDataToSend.append('Category', formData.category);
+      formDataToSend.append('Description', formData.description);
+      formDataToSend.append('Price', formData.price);
+      formDataToSend.append('SpecialTag', formData.specialTag);
+      if (formData.image) {
+        formDataToSend.append('File', formData.image);
+      }
+      const result = await createMenuItem(formDataToSend);
+      if (result.isSuccess !== false) {
+        toast.success('Menu item created successfully!');
+        refetch();
+      } else {
+        toast.error('Failed to create menu item');
+      }
+      setShowModal(false);
+      resetForm();
     } catch (error) {
       console.log(error);
     } finally {
@@ -39,9 +70,13 @@ function MenuItemManagement() {
       | ChangeEvent<HTMLTextAreaElement>
       | ChangeEvent<HTMLSelectElement>,
   ) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
     console.log(name, value);
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'image') {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleCloseModal = () => {

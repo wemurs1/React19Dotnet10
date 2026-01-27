@@ -18,7 +18,7 @@ export type MenuItemForm = {
   specialTag: string;
   price: string;
   image: string | null;
-}
+};
 
 export const menuItemsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -36,7 +36,16 @@ export const menuItemsApi = baseApi.injectEndpoints({
         return [] as MenuItem[];
       },
     }),
+
+    createMenuItem: builder.mutation({
+      query: (formData: FormData) => ({
+        url: '/MenuItem',
+        method: 'POST',
+        body: formData,
+      }),
+      invalidatesTags: ['MenuItem'],
+    }),
   }),
 });
 
-export const { useGetMenuItemsQuery } = menuItemsApi;
+export const { useGetMenuItemsQuery, useCreateMenuItemMutation } = menuItemsApi;

@@ -140,7 +140,13 @@ function MenuItemModal({ onClose, isSubmitting, formData, onSubmit, onChange }: 
 
                 <div className='mb-4'>
                   <label className='form-label'>Image</label>
-                  <input type='file' className='form-control' name='image' accept='image/*' />
+                  <input
+                    type='file'
+                    className='form-control'
+                    name='image'
+                    accept='image/*'
+                    onChange={onChange}
+                  />
                   <div className='form-text'>Upload an image for the menu item</div>
                 </div>
 
