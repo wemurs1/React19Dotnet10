@@ -11,11 +11,10 @@ namespace MangoFusion_API.Controllers;
 [Route("api/MenuItem")]
 public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env) : Controller
 {
-    private readonly ApiResponse _response = new ApiResponse();
-
     [HttpGet]
-    public async Task<ActionResult<ApiResponse>> GetMenuItems()
+    public async Task<ActionResult<ApiResponse<List<MenuItem>>>> GetMenuItems()
     {
+        var _response = new ApiResponse<List<MenuItem>>();
         List<MenuItem> menuItems = await db.MenuItems.ToListAsync();
 
         List<OrderDetail> orderDetailsWithRating = await db.OrderDetails.Where(o => o.Rating != null).ToListAsync();
@@ -35,6 +34,8 @@ public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env
     [HttpGet("{id:int}", Name = "GetMenuItem")]
     public async Task<IActionResult> GetMenuItem(int id)
     {
+        var _response = new ApiResponse<MenuItem>();
+
         if (id == 0)
         {
             _response.StatusCode = HttpStatusCode.BadRequest;
@@ -60,8 +61,10 @@ public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env
     }
 
     [HttpPost]
-    public async Task<ActionResult<ApiResponse>> CreateMenuItem([FromForm] MenuItemCreateDTO menuItemCreateDTO)
+    public async Task<ActionResult<ApiResponse<MenuItem>>> CreateMenuItem([FromForm] MenuItemCreateDTO menuItemCreateDTO)
     {
+        var _response = new ApiResponse<MenuItem>();
+
         try
         {
             if (ModelState.IsValid)
@@ -122,8 +125,10 @@ public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ApiResponse>> UpdateMenuItem(int id, [FromForm] MenuItemUpdateDTO menuItemUpdateDTO)
+    public async Task<ActionResult<ApiResponse<MenuItem>>> UpdateMenuItem(int id, [FromForm] MenuItemUpdateDTO menuItemUpdateDTO)
     {
+        var _response = new ApiResponse<MenuItem>();
+
         try
         {
             if (ModelState.IsValid)
@@ -195,8 +200,10 @@ public class MenuItemController(ApplicationDbContext db, IWebHostEnvironment env
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult<ApiResponse>> DeleteMenuItem(int id)
+    public async Task<ActionResult<ApiResponse<MenuItem>>> DeleteMenuItem(int id)
     {
+        var _response = new ApiResponse<MenuItem>();
+
         try
         {
             if (ModelState.IsValid)

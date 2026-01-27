@@ -8,3 +8,9 @@ export const ROUTES = {
   MENU_MANAGEMENT: '/menu-management',
   ORDER_MANAGEMENT: '/order-management',
 };
+
+export const API_BASE_URL = 'https://localhost:7014';
+
+export const CATEGORY = ['Appetizer', 'Entrée', 'Dessert'];
+
+export const SPECIAL_TAG = ['', 'Best Seller', 'Top Rated', "Chef's Special", 'New'];

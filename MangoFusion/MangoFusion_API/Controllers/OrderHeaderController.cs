@@ -13,11 +13,11 @@ namespace MangoFusion_API.Controllers;
 public class OrderHeaderController(ApplicationDbContext db) : Controller
 {
     private readonly ApplicationDbContext _db = db;
-    private readonly ApiResponse _response = new ApiResponse();
 
     [HttpGet]
-    public ActionResult<ApiResponse> GetOrders(string userId = "")
+    public ActionResult<ApiResponse<IEnumerable<OrderHeader>>> GetOrders(string userId = "")
     {
+        ApiResponse<IEnumerable<OrderHeader>> _response = new();
         IEnumerable<OrderHeader> orderHeaderList = _db.OrderHeaders.Include(d => d.OrderDetails).ThenInclude(m => m.MenuItem).OrderByDescending(o => o.OrderHeaderId);
         if (!string.IsNullOrEmpty(userId))
         {
@@ -29,8 +29,9 @@ public class OrderHeaderController(ApplicationDbContext db) : Controller
     }
 
     [HttpGet("{orderId:int}")]
-    public ActionResult<ApiResponse> GetOrder(int orderId)
+    public ActionResult<ApiResponse<OrderHeader>> GetOrder(int orderId)
     {
+        ApiResponse<OrderHeader> _response = new();
         if (orderId == 0)
         {
             _response.IsSuccess = false;
@@ -56,8 +57,9 @@ public class OrderHeaderController(ApplicationDbContext db) : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<ApiResponse>> CreateOrder([FromBody] OrderHeaderCreateDTO orderHeaderDTO)
+    public async Task<ActionResult<ApiResponse<OrderHeader>>> CreateOrder([FromBody] OrderHeaderCreateDTO orderHeaderDTO)
     {
+        ApiResponse<OrderHeader> _response = new();
         try
         {
             if (ModelState.IsValid)
@@ -112,8 +114,9 @@ public class OrderHeaderController(ApplicationDbContext db) : Controller
     }
 
     [HttpPut("{orderId:int}")]
-    public async Task<ActionResult<ApiResponse>> UpdateOrder(int orderId, [FromBody] OrderHeaderUpdateDTO orderHeaderDTO)
+    public async Task<ActionResult<ApiResponse<OrderHeader>>> UpdateOrder(int orderId, [FromBody] OrderHeaderUpdateDTO orderHeaderDTO)
     {
+        ApiResponse<OrderHeader> _response = new();
         try
         {
             if (ModelState.IsValid)

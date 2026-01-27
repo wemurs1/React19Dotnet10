@@ -12,10 +12,10 @@ namespace MangoFusion_API.Controllers;
 public class OrderDetailsController(ApplicationDbContext db) : Controller
 {
     private readonly ApplicationDbContext _db = db;
-    private readonly ApiResponse _response = new ApiResponse();
+    private readonly ApiResponse<OrderDetailsUpdateDTO> _response = new();
 
     [HttpPut("{orderDetailsId:int}")]
-    public async Task<ActionResult<ApiResponse>> UpdateOrder(int orderDetailsId, [FromBody] OrderDetailsUpdateDTO orderDetailsDTO)
+    public async Task<ActionResult<ApiResponse<OrderDetailsUpdateDTO>>> UpdateOrder(int orderDetailsId, [FromBody] OrderDetailsUpdateDTO orderDetailsDTO)
     {
         try
         {

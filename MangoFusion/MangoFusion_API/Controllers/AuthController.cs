@@ -17,13 +17,13 @@ namespace MangoFusion_API.Controllers;
 public class AuthController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration) : Controller
 {
     private readonly string _secretKey = configuration.GetValue<string>("ApiSettings:Secret") ?? "";
-    private readonly ApiResponse _response = new ApiResponse();
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDTO model)
     {
+        ApiResponse<ApplicationUser> _response = new();
         if (ModelState.IsValid)
         {
             ApplicationUser newUser = new()
@@ -86,6 +86,7 @@ public class AuthController(UserManager<ApplicationUser> userManager, RoleManage
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDTO model)
     {
+        ApiResponse<LoginResponseDTO> _response = new();
         if (ModelState.IsValid)
         {
             var userFromDb = await _userManager.FindByEmailAsync(model.Email);
