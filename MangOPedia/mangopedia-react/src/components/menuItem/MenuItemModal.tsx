@@ -14,9 +14,10 @@ type Props = {
       | ChangeEvent<HTMLTextAreaElement>
       | ChangeEvent<HTMLSelectElement>,
   ) => void;
+  isEditing: boolean;
 };
 
-function MenuItemModal({ onClose, isSubmitting, formData, onSubmit, onChange }: Props) {
+function MenuItemModal({ onClose, isSubmitting, formData, onSubmit, onChange, isEditing }: Props) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errors: string[] = [];
@@ -55,7 +56,7 @@ function MenuItemModal({ onClose, isSubmitting, formData, onSubmit, onChange }: 
         <div className={`modal-dialog modal-lg`} role='document'>
           <div className='modal-content'>
             <div className='modal-header'>
-              <h5 className='modal-title'>Add New Menu Item</h5>
+              <h5 className='modal-title'>{isEditing ? 'Edit' : 'Add New'} Menu Item</h5>
               <button type='button' className='btn-close' aria-label='Close' onClick={onClose} />
             </div>
             <div className='modal-body'>
@@ -158,7 +159,7 @@ function MenuItemModal({ onClose, isSubmitting, formData, onSubmit, onChange }: 
                     {isSubmitting ? (
                       <span className='spinner-border spinner-border-sm me-2' />
                     ) : (
-                      <>CREATE MENU ITEM</>
+                      <>{isEditing ? 'UPDATE MENU ITEM' : 'CREATE MENU ITEM'}</>
                     )}
                   </button>
                 </div>

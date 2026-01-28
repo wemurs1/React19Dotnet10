@@ -8,9 +8,10 @@ type Props = {
   isLoading: boolean;
   error: FetchBaseQueryError | SerializedError | undefined;
   onDelete: (item: MenuItem) => void;
+  onEdit: (item: MenuItem) => void;
 };
 
-function MenuItemTable({ menuItems, isLoading, error, onDelete }: Props) {
+function MenuItemTable({ menuItems, isLoading, error, onDelete, onEdit }: Props) {
   if (isLoading) {
     return (
       <div className='text-center py-4'>
@@ -86,7 +87,11 @@ function MenuItemTable({ menuItems, isLoading, error, onDelete }: Props) {
                 </td>
                 <td>
                   <div className='btn-group' role='group'>
-                    <button className='btn btn-sm btn-outline-success' title='Edit'>
+                    <button
+                      className='btn btn-sm btn-outline-success'
+                      title='Edit'
+                      onClick={() => onEdit(item)}
+                    >
                       <i className='bi bi-pencil'></i>
                     </button>
                     <button

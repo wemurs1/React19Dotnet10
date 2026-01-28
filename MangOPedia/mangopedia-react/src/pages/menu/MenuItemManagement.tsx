@@ -20,6 +20,7 @@ function MenuItemManagement() {
   const [updateMenuItem] = useUpdateMenuItemMutation();
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(null);
   const [formData, setFormData] = useState<MenuItemForm>({
     name: '',
     description: '',
@@ -36,6 +37,25 @@ function MenuItemManagement() {
       specialTag: '',
       category: '',
       price: '',
+      image: null,
+    });
+  };
+
+  const handleAddMenuItem = async () => {
+    resetForm();
+    setSelectedMenuItem(null);
+    setShowModal(true);
+  };
+
+  const handleEditMenuItem = async (item: MenuItem) => {
+    setSelectedMenuItem(item);
+    setShowModal(true);
+    setFormData({
+      name: item.name || '',
+      description: item.description || '',
+      specialTag: item.specialTag || '',
+      category: item.category || '',
+      price: item.price.toString() || '',
       image: null,
     });
   };
@@ -73,12 +93,28 @@ function MenuItemManagement() {
       if (formData.image) {
         formDataToSend.append('File', formData.image);
       }
-      const result = await createMenuItem(formDataToSend);
-      if (result.isSuccess !== false) {
-        toast.success('Menu item created successfully!');
-        refetch();
+      let result;
+      if (selectedMenuItem) {
+        // edit mode
+        formDataToSend.append('Id', selectedMenuItem.id.toString());
+        result = await updateMenuItem({
+          id: selectedMenuItem.id.toString(),
+          formData: formDataToSend,
+        });
+        if (result.isSuccess !== false) {
+          toast.success('Menu item created successfully!');
+          refetch();
+        } else {
+          toast.error('Failed to create menu item');
+        }
       } else {
-        toast.error('Failed to create menu item');
+        result = await createMenuItem(formDataToSend);
+        if (result.isSuccess !== false) {
+          toast.success('Menu item created successfully!');
+          refetch();
+        } else {
+          toast.error('Failed to create menu item');
+        }
       }
       setShowModal(false);
       resetForm();
@@ -117,7 +153,7 @@ function MenuItemManagement() {
               <h2>Menu Item Management</h2>
               <p className='text-muted mb-0'>Manage your restaurant's menu items</p>
             </div>
-            <button className='btn btn-primary' onClick={() => setShowModal(true)}>
+            <button className='btn btn-primary' onClick={handleAddMenuItem}>
               <i className='bi bi-plus-circle me-2'></i>
               Add Menu Item
             </button>
@@ -133,6 +169,7 @@ function MenuItemManagement() {
                 isLoading={isLoading}
                 error={error}
                 onDelete={handleDeleteMenuItem}
+                onEdit={handleEditMenuItem}
               />
             </div>
           </div>
@@ -145,6 +182,7 @@ function MenuItemManagement() {
           formData={formData}
           onSubmit={handleFormSubmit}
           onChange={handleInputChange}
+          isEditing={!!selectedMenuItem}
         />
       )}
     </div>
