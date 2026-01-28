@@ -13,7 +13,8 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
 function MenuItemManagement() {
-  const { data: menuItems = [] as MenuItem[], isLoading, error, refetch } = useGetMenuItemsQuery();
+  const { data = [], isLoading, error, refetch } = useGetMenuItemsQuery();
+  const menuItems: MenuItem[] = data;
 
   const [createMenuItem] = useCreateMenuItemMutation();
   const [deleteMenuItem] = useDeleteMenuItemMutation();
