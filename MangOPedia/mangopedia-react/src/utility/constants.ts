@@ -4,6 +4,7 @@ export const ROUTES = {
   REGISTER: '/register',
   CART: '/cart',
   CHECKOUT: '/checkout',
+  MENU_DETAIL: '/menu/:id',
   ORDER_CONFIRMATION: '/order-confirmation',
   MENU_MANAGEMENT: '/menu-management',
   ORDER_MANAGEMENT: '/order-management',

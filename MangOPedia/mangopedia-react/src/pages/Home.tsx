@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useGetMenuItemsQuery, type MenuItem } from '../store/api/menuItemApi';
-import { API_BASE_URL, CATEGORY } from '../utility/constants';
+import { API_BASE_URL, CATEGORY, ROUTES } from '../utility/constants';
+import { Link } from 'react-router-dom';
 
 function Home() {
   const { data = [], isLoading, error, refetch } = useGetMenuItemsQuery();
@@ -144,9 +145,12 @@ function Home() {
                     <div className='mt-auto'>
                       <div className='row g-2'>
                         <div className='col-6'>
-                          <a href='#' className='btn btn-outline-primary w-100 btn-sm fw-semibold'>
+                          <Link
+                            to={ROUTES.MENU_DETAIL.replace(':id', item.id.toString())}
+                            className='btn btn-outline-primary w-100 btn-sm fw-semibold'
+                          >
                             <i className='bi bi-info-circle me-1'></i>Details
-                          </a>
+                          </Link>
                         </div>
                         <div className='col-6'>
                           <button className='btn btn-primary w-100 btn-sm fw-semibold'>
