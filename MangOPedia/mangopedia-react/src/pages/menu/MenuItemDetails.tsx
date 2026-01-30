@@ -2,6 +2,9 @@ import { useParams } from 'react-router-dom';
 import { useGetMenuItemByIdQuery, type MenuItem } from '../../store/api/menuItemApi';
 import { API_BASE_URL } from '../../utility/constants';
 import { useState } from 'react';
+import { useAppDispatch } from '../../store/store';
+import { addToCart, type CartItemType } from '../../store/slice/cartSlice';
+import { toast } from 'react-toastify';
 
 function MenuItemDetails() {
   const { id } = useParams();
@@ -11,6 +14,20 @@ function MenuItemDetails() {
   const { data, isLoading, error, refetch } = useGetMenuItemByIdQuery(itemId);
   const selectedMenuItem: MenuItem = data;
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useAppDispatch();
+
+  const handleAddToCart = () => {
+    dispatch(
+      addToCart({
+        id: selectedMenuItem.id,
+        name: selectedMenuItem.name,
+        price: selectedMenuItem.price,
+        image: selectedMenuItem.image,
+        quantity: quantity,
+      } as CartItemType),
+    );
+    toast.success(`${selectedMenuItem.name} added to cart!`);
+  };
 
   if (!isValidItemId) {
     return (
@@ -172,7 +189,7 @@ function MenuItemDetails() {
                       </div>
                       <div className='col-sm-7'>
                         <div className='d-grid gap-2'>
-                          <button className='btn btn-primary btn-lg fw-semibold shadow-sm'>
+                          <button className='btn btn-primary btn-lg fw-semibold shadow-sm' onClick={handleAddToCart}>
                             <i className='bi bi-cart-plus me-2'></i>
                             Add to Cart
                           </button>
@@ -194,7 +211,9 @@ function MenuItemDetails() {
                           </small>
                         </div>
                         <div className='col-6 text-end'>
-                          <span className='fw-bold text-primary h5 mb-0'>{(selectedMenuItem.price*quantity).toFixed(2)}</span>
+                          <span className='fw-bold text-primary h5 mb-0'>
+                            {(selectedMenuItem.price * quantity).toFixed(2)}
+                          </span>
                         </div>
                       </div>
                     </div>
