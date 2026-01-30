@@ -1,7 +1,18 @@
 import { ROUTES } from '../../utility/constants';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import { logout } from '../../store/slice/authSlice';
 
 function Header() {
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate(ROUTES.HOME);
+  };
+
   return (
     <nav className='navbar navbar-expand-lg  border-bottom shadow-sm'>
       <div className='container py-2'>
@@ -30,7 +41,6 @@ function Header() {
           </ul>
           <ul className='navbar-nav ms-auto align-items-lg-center gap-lg-1'>
             {/* Theme toggle visible for all users */}
-
             <li className='nav-item me-lg-2'>
               <NavLink
                 to={ROUTES.CART}
@@ -48,68 +58,78 @@ function Header() {
               </NavLink>
             </li>
 
-            <li className='nav-item dropdown'>
-              <button
-                className='nav-link dropdown-toggle btn btn-link d-flex align-items-center gap-2'
-                data-bs-toggle='dropdown'
-                aria-expanded='false'
-              >
-                <i className='bi bi-person-circle fs-5 text-primary'></i>
-                <span className='text-truncate' style={{ maxWidth: '120px' }}>
-                  Hello
-                </span>
-              </button>
-              <ul
-                className='dropdown-menu dropdown-menu-end shadow border rounded-3 p-2 small'
-                style={
-                  {
-                    minWidth: '220px',
-                    '--bs-dropdown-link-active-bg': 'rgba(var(--bs-primary-rgb), .12)',
-                    '--bs-dropdown-link-active-color': 'var(--bs-body-color)',
-                    '--bs-dropdown-link-hover-bg': 'rgba(var(--bs-primary-rgb), .08)',
-                  } as React.CSSProperties
-                }
-              >
-                {/* Removed header (avatar/name/role) for a cleaner minimal dropdown */}
-                <li>
-                  <NavLink
-                    to={ROUTES.ORDER_MANAGEMENT}
-                    className='dropdown-item d-flex align-items-center gap-2 rounded-2'
+            {isAuthenticated ? (
+              <>
+                <li className='nav-item dropdown'>
+                  <button
+                    className='nav-link dropdown-toggle btn btn-link d-flex align-items-center gap-2'
+                    data-bs-toggle='dropdown'
+                    aria-expanded='false'
                   >
-                    <i className='bi bi-speedometer2 text-primary'></i>
-                    <span>Order Management</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={ROUTES.MENU_MANAGEMENT}
-                    className='dropdown-item d-flex align-items-center gap-2 rounded-2'
-                  >
-                    <i className='bi bi-list-ul text-primary'></i>
-                    <span>Menu Management</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <hr className='dropdown-divider my-2' />
-                </li>
-                <li>
-                  <button className='dropdown-item d-flex align-items-center gap-2 text-danger rounded-2'>
-                    <i className='bi bi-box-arrow-right'></i>
-                    <span>Logout</span>
+                    <i className='bi bi-person-circle fs-5 text-primary'></i>
+                    <span className='text-truncate' style={{ maxWidth: '120px' }}>
+                      Hello
+                    </span>
                   </button>
+                  <ul
+                    className='dropdown-menu dropdown-menu-end shadow border rounded-3 p-2 small'
+                    style={
+                      {
+                        minWidth: '220px',
+                        '--bs-dropdown-link-active-bg': 'rgba(var(--bs-primary-rgb), .12)',
+                        '--bs-dropdown-link-active-color': 'var(--bs-body-color)',
+                        '--bs-dropdown-link-hover-bg': 'rgba(var(--bs-primary-rgb), .08)',
+                      } as React.CSSProperties
+                    }
+                  >
+                    {/* Removed header (avatar/name/role) for a cleaner minimal dropdown */}
+                    <li>
+                      <NavLink
+                        to={ROUTES.ORDER_MANAGEMENT}
+                        className='dropdown-item d-flex align-items-center gap-2 rounded-2'
+                      >
+                        <i className='bi bi-speedometer2 text-primary'></i>
+                        <span>Order Management</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to={ROUTES.MENU_MANAGEMENT}
+                        className='dropdown-item d-flex align-items-center gap-2 rounded-2'
+                      >
+                        <i className='bi bi-list-ul text-primary'></i>
+                        <span>Menu Management</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <hr className='dropdown-divider my-2' />
+                    </li>
+                    <li>
+                      <button
+                        className='dropdown-item d-flex align-items-center gap-2 text-danger rounded-2'
+                        onClick={handleLogout}
+                      >
+                        <i className='bi bi-box-arrow-right'></i>
+                        <span>Logout</span>
+                      </button>
+                    </li>
+                  </ul>
                 </li>
-              </ul>
-            </li>
-            <li className='nav-item'>
-              <NavLink to={ROUTES.LOGIN} className='nav-link'>
-                Login
-              </NavLink>
-            </li>
-            <li className='nav-item'>
-              <NavLink to={ROUTES.REGISTER} className='nav-link'>
-                Register
-              </NavLink>
-            </li>
+              </>
+            ) : (
+              <>
+                <li className='nav-item'>
+                  <NavLink to={ROUTES.LOGIN} className='nav-link'>
+                    Login
+                  </NavLink>
+                </li>
+                <li className='nav-item'>
+                  <NavLink to={ROUTES.REGISTER} className='nav-link'>
+                    Register
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
