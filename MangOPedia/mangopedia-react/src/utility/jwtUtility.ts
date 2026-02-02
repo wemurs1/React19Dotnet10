@@ -10,7 +10,7 @@ export type DecodedJWT = {
 
 type jwtFields = {
   id: string;
-  fullName: string;
+  fullname: string;
   email: string;
   role?: string;
   exp?: number;
@@ -34,7 +34,7 @@ export const getUserInfoFromToken = (token: string) => {
   if (!decodedToken) return null;
   const returnedData: DecodedJWT = {
     id: decodedToken.id,
-    name: decodedToken.fullName,
+    name: decodedToken.fullname,
     email: decodedToken.email,
     role: decodedToken.role,
     exp: decodedToken.exp,

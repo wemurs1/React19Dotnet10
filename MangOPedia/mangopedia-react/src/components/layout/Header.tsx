@@ -1,10 +1,12 @@
-import { ROUTES } from '../../utility/constants';
+import { ROLES, ROUTES } from '../../utility/constants';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { logout } from '../../store/slice/authSlice';
+import type { CSSProperties } from 'react';
 
 function Header() {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { totalItems } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -53,7 +55,7 @@ function Header() {
                   className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white shadow-sm'
                   style={{ fontSize: '0.7rem' }}
                 >
-                  10
+                  {totalItems}
                 </span>
               </NavLink>
             </li>
@@ -68,7 +70,7 @@ function Header() {
                   >
                     <i className='bi bi-person-circle fs-5 text-primary'></i>
                     <span className='text-truncate' style={{ maxWidth: '120px' }}>
-                      Hello
+                      Hello {user?.name?.split(' ')?.[0] || 'User'}
                     </span>
                   </button>
                   <ul
@@ -76,34 +78,39 @@ function Header() {
                     style={
                       {
                         minWidth: '220px',
+                        zIndex: 1050,
                         '--bs-dropdown-link-active-bg': 'rgba(var(--bs-primary-rgb), .12)',
                         '--bs-dropdown-link-active-color': 'var(--bs-body-color)',
                         '--bs-dropdown-link-hover-bg': 'rgba(var(--bs-primary-rgb), .08)',
-                      } as React.CSSProperties
+                      } as CSSProperties
                     }
                   >
                     {/* Removed header (avatar/name/role) for a cleaner minimal dropdown */}
-                    <li>
-                      <NavLink
-                        to={ROUTES.ORDER_MANAGEMENT}
-                        className='dropdown-item d-flex align-items-center gap-2 rounded-2'
-                      >
-                        <i className='bi bi-speedometer2 text-primary'></i>
-                        <span>Order Management</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        to={ROUTES.MENU_MANAGEMENT}
-                        className='dropdown-item d-flex align-items-center gap-2 rounded-2'
-                      >
-                        <i className='bi bi-list-ul text-primary'></i>
-                        <span>Menu Management</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <hr className='dropdown-divider my-2' />
-                    </li>
+                    {user?.role === ROLES.ADMIN && (
+                      <>
+                        <li>
+                          <NavLink
+                            to={ROUTES.ORDER_MANAGEMENT}
+                            className='dropdown-item d-flex align-items-center gap-2 rounded-2'
+                          >
+                            <i className='bi bi-speedometer2 text-primary'></i>
+                            <span>Order Management</span>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to={ROUTES.MENU_MANAGEMENT}
+                            className='dropdown-item d-flex align-items-center gap-2 rounded-2'
+                          >
+                            <i className='bi bi-list-ul text-primary'></i>
+                            <span>Menu Management</span>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <hr className='dropdown-divider my-2' />
+                        </li>
+                      </>
+                    )}
                     <li>
                       <button
                         className='dropdown-item d-flex align-items-center gap-2 text-danger rounded-2'

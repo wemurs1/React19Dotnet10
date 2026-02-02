@@ -133,7 +133,6 @@ function MenuItemManagement() {
       | ChangeEvent<HTMLSelectElement>,
   ) => {
     const { name, value, files } = e.target;
-    console.log(name, value);
     if (name === 'image') {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {

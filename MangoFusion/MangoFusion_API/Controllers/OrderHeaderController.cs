@@ -3,19 +3,21 @@ using MangoFusion_API.Data;
 using MangoFusion_API.Models;
 using MangoFusion_API.Models.Dto;
 using MangoFusion_API.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace MangoFusion_API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class OrderHeaderController(ApplicationDbContext db) : Controller
 {
     private readonly ApplicationDbContext _db = db;
 
     [HttpGet]
-    public ActionResult<ApiResponse<IEnumerable<OrderHeader>>> GetOrders(string userId = "")
+    public ActionResult<ApiResponse<IEnumerable<OrderHeader >>> GetOrders(string userId = "")
     {
         ApiResponse<IEnumerable<OrderHeader>> _response = new();
         IEnumerable<OrderHeader> orderHeaderList = _db.OrderHeaders.Include(d => d.OrderDetails).ThenInclude(m => m.MenuItem).OrderByDescending(o => o.OrderHeaderId);
@@ -161,7 +163,7 @@ public class OrderHeaderController(ApplicationDbContext db) : Controller
                     {
                         orderHeaderFromDb.Status = SD.Status_Completed;
                     }
-                    if (orderHeaderFromDb.Status.Equals(SD.Status_Cancelled, StringComparison.InvariantCultureIgnoreCase))
+                    if (orderHeaderDTO.Status.Equals(SD.Status_Cancelled, StringComparison.InvariantCultureIgnoreCase))
                     {
                         orderHeaderFromDb.Status = SD.Status_Cancelled;
                     }

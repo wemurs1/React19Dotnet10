@@ -1,0 +1,181 @@
+import type { ChangeEvent } from 'react';
+import type { Order } from '../../store/api/ordersApi';
+import { ORDER_STATUS } from '../../utility/constants';
+import { formatDate } from '../../utility/generalUtility';
+
+export type UpdateDataModal = {
+  status: string;
+};
+
+type Props = {
+  onClose: () => void;
+  isSubmitting: boolean;
+  order: Order | null;
+  onSubmit: () => void;
+  updateData: { status: string };
+  onUpdateDataChange: ({ status }: UpdateDataModal) => void;
+};
+
+function OrderDetailsModal({
+  onClose,
+  onSubmit,
+  isSubmitting,
+  order,
+  updateData,
+  onUpdateDataChange,
+}: Props) {
+  if (!order) return;
+  return (
+    <>
+      <div className='modal-backdrop fade show' />
+      <div className='modal fade show' style={{ display: 'block' }} tabIndex={-1} role='dialog'>
+        <div className='modal-dialog modal-lg modal-dialog-scrollable' role='document'>
+          <div className='modal-content border-0 shadow'>
+            <div className='modal-header border-0 pb-0'>
+              <div>
+                <h5 className='modal-title fw-bold mb-0'>Order #{order.orderHeaderId}</h5>
+                <small className='text-muted'>Placed {formatDate(order.orderDate)}</small>
+              </div>
+              <button type='button' className='btn-close' aria-label='Close' onClick={onClose} />
+            </div>
+            <div className='modal-body'>
+              <form className='pt-2' onSubmit={onSubmit}>
+                <div className='row g-3 mb-3'>
+                  <div className='col-md-6'>
+                    <div className='border rounded-3 p-3 h-100'>
+                      <h6 className='fw-bold mb-2'>Order Info</h6>
+                      <div className='small mb-1'>
+                        <strong>Total:</strong> ${order.orderTotal.toFixed(2)}
+                      </div>
+                      <div className='small'>
+                        <strong>Status:</strong>
+                        <span className={`badge p-2 text-bg-success ms-1`}>{order.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='col-md-6'>
+                    <div className='border rounded-3 p-3 h-100'>
+                      <h6 className='fw-bold mb-2'>Customer</h6>
+                      <div className='small mb-1'>
+                        <strong>Name:</strong>
+                        {order.pickUpName || 'N/A'}
+                      </div>
+                      <div className='small mb-1'>
+                        <strong>Email:</strong>
+                        {order.pickUpEmail || 'N/A'}
+                      </div>
+                      <div className='small'>
+                        <strong>Phone:</strong>
+                        {order.pickUpPhoneNumber || 'N/A'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='border rounded-3 p-3 mb-3'>
+                  <h6 className='fw-bold mb-2'>Update Status</h6>
+                  <div className='row g-3'>
+                    <div className='col-md-6'>
+                      <label className='form-label small fw-semibold text-uppercase text-muted'>
+                        Current
+                      </label>
+                      <div>
+                        <span className={`btn disabled btn-success`}>{order.status}</span>
+                      </div>
+                    </div>
+                    <div className='col-md-6'>
+                      <label className='form-label small fw-semibold text-uppercase text-muted'>
+                        Change To
+                      </label>
+                      <select
+                        className='form-select'
+                        value={updateData.status || ''}
+                        onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                          onUpdateDataChange({ ...updateData, status: e.target.value })
+                        }
+                      >
+                        <option value=''>Select...</option>
+                        {order.status === ORDER_STATUS.CONFIRMED && (
+                          <option value={ORDER_STATUS.READY_FOR_PICKUP}>
+                            {ORDER_STATUS.READY_FOR_PICKUP}
+                          </option>
+                        )}
+                        {order.status === ORDER_STATUS.READY_FOR_PICKUP && (
+                          <option value={ORDER_STATUS.COMPLETED}>{ORDER_STATUS.COMPLETED}</option>
+                        )}
+                        <option value={ORDER_STATUS.CANCELLED}>{ORDER_STATUS.CANCELLED}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className='border rounded-3 p-3 mb-3'>
+                  <div className='d-flex align-items-center justify-content-between mb-3'>
+                    <h6 className='fw-bold mb-0'>Items</h6>
+                    <span className='badge bg-success-subtle text-success px-3 py-2'>
+                      <i className='bi bi-star me-1'></i>
+                      You can now rate your items
+                    </span>
+                  </div>
+                  <div className='vstack gap-3'>
+                    {order.orderDetails.length > 0 ? (
+                      order.orderDetails.map((item, index) => (
+                        <div className='border rounded-2 p-3' key={index}>
+                          <div className='d-flex justify-content-between flex-wrap gap-3 mb-2'>
+                            <div className='flex-grow-1'>
+                              <div className='fw-semibold'>{item.itemName}</div>
+                              <div className='small text-muted'>
+                                Qty {item.quantity} × ${item.price.toFixed(2)}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Rating section for completed orders */}
+                          <div className='mt-3 pt-3 border-top bg-light rounded p-3'>
+                            <div className='d-flex align-items-center justify-content-between'>
+                              <div>
+                                <h6 className='mb-1 fw-semibold small text-primary'>
+                                  <i className='bi bi-star me-1'></i>
+                                  Rate this item
+                                </h6>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className='text-muted'>No items found</div>
+                    )}
+                  </div>
+                </div>
+                <div className='d-flex justify-content-end gap-2 pt-2'>
+                  <button type='button' className='btn btn-secondary' onClick={onClose}>
+                    Close
+                  </button>
+                  <button
+                    type='submit'
+                    className='btn btn-primary'
+                    disabled={isSubmitting || !updateData.status}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        {' '}
+                        <span
+                          className='spinner-border spinner-border-sm me-2'
+                          role='status'
+                          aria-hidden='true'
+                        ></span>
+                        Updating...
+                      </>
+                    ) : (
+                      <>"Update Order"</>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+export default OrderDetailsModal;

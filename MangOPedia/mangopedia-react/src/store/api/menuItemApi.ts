@@ -39,7 +39,7 @@ export const menuItemsApi = baseApi.injectEndpoints({
 
     getMenuItemById: builder.query({
       query: (id) => `/MenuItem/${id}`,
-      providesTags: (result, error, { id }) => [{ type: 'MenuItem', id }],
+      providesTags: (_result, _error, { id }) => [{ type: 'MenuItem', id }],
       transformResponse: (response) => {
         if (response && response.result) {
           return response.result as MenuItem[];

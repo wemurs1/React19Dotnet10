@@ -1,10 +1,6 @@
+import { STORAGE_KEYS } from '../../utility/constants';
 import { getUserInfoFromToken, isTokenExpired, type DecodedJWT } from '../../utility/jwtUtility';
 import { createSlice } from '@reduxjs/toolkit';
-
-const STORAGE_KEYS = {
-  TOKEN: 'token-mango',
-  USER: 'user-mango',
-};
 
 export type AuthState = {
   user: DecodedJWT | null;

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-const STORAGE_KEY_CART = 'cart-mango';
+import { STORAGE_KEYS } from '../../utility/constants';
 
 export type CartItemType = {
   id: number;
@@ -23,18 +22,18 @@ export type CartState = {
 
 const getStoredCart = () => {
   try {
-    const cart = localStorage.getItem(STORAGE_KEY_CART);
+    const cart = localStorage.getItem(STORAGE_KEYS.CART);
     const parsed: CartItemType[] = cart ? JSON.parse(cart) : [];
     return Array.isArray(parsed) ? parsed : ([] as CartItemType[]);
   } catch {
-    localStorage.removeItem(STORAGE_KEY_CART);
+    localStorage.removeItem(STORAGE_KEYS.CART);
     return [] as CartItemType[];
   }
 };
 
 const saveCart = (items: CartItemType[]) => {
   try {
-    localStorage.setItem(STORAGE_KEY_CART, JSON.stringify(items));
+    localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(items));
   } catch (error) {
     console.warn('Failed to save cart', error);
   }
@@ -73,8 +72,34 @@ const cartSlice = createSlice({
       Object.assign(state, calculateTotals(state.items));
       saveCart(state.items);
     },
+
+    removeFromCart: (state, action) => {
+      const id = action.payload as number;
+      state.items = state.items.filter((item) => item.id !== id);
+      Object.assign(state, calculateTotals(state.items));
+      saveCart(state.items);
+    },
+
+    updateQuantity: (state, action) => {
+      const { id, quantity } = action.payload as CartItemType;
+      if (quantity <= 0) {
+        state.items = state.items.filter((item) => item.id !== id);
+      } else {
+        const item = state.items.find((item) => item.id === id);
+        if (item) item.quantity = quantity;
+      }
+      Object.assign(state, calculateTotals(state.items));
+      saveCart(state.items);
+    },
+
+    clearCart: (state) => {
+      state.items = [];
+      state.totalAmount = 0;
+      state.totalItems = 0;
+      localStorage.removeItem(STORAGE_KEYS.CART);
+    },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
