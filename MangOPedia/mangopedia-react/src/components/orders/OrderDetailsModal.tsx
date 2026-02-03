@@ -46,18 +46,15 @@ function OrderDetailsModal({
     try {
       await updateOrderDetails({ orderDetailId: orderDetailId, rating: newRating }).unwrap();
       const found = ratings.some((r) => r.orderDetailId === orderDetailId);
-      let updatedRatings: RatingTracker[];
       if (found) {
-        updatedRatings = ratings.map((rating) =>
+        const updatedRatings = ratings.map((rating) =>
           rating.orderDetailId === orderDetailId ? { ...rating, rating: newRating } : rating,
         );
+        setRatings(updatedRatings);
       } else {
-        updatedRatings = ratings;
-        updatedRatings.push({ orderDetailId: orderDetailId, rating: newRating });
+        setRatings([...ratings, { orderDetailId: orderDetailId, rating: newRating }]);
       }
-      console.log(updatedRatings);
 
-      setRatings(updatedRatings);
       toast.success(
         `Rating of ${newRating} star${newRating !== 1 ? 's' : ''} submitted successfuly`,
       );
