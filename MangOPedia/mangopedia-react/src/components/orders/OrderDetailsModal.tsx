@@ -4,6 +4,7 @@ import { ORDER_STATUS } from '../../utility/constants';
 import { formatDate, getOrderStatusColor } from '../../utility/generalUtility';
 import Rating from '../ui/Rating';
 import { toast } from 'react-toastify';
+import { useAppSelector } from '../../store/store';
 
 type RatingTracker = {
   orderDetailId: number;
@@ -40,7 +41,10 @@ function OrderDetailsModal({
   });
 
   const [ratings, setRatings] = useState(initialRatings);
+  const { user } = useAppSelector((state) => state.auth);
   if (!order) return;
+
+  const canRate = order.status === ORDER_STATUS.COMPLETED && order.applicationUserId === user?.id;
 
   const handleRatingChange = async (orderDetailId: number, newRating: number) => {
     try {
@@ -157,10 +161,12 @@ function OrderDetailsModal({
                 <div className='border rounded-3 p-3 mb-3'>
                   <div className='d-flex align-items-center justify-content-between mb-3'>
                     <h6 className='fw-bold mb-0'>Items</h6>
-                    <span className='badge bg-success-subtle text-success px-3 py-2'>
-                      <i className='bi bi-star me-1'></i>
-                      You can now rate your items
-                    </span>
+                    {canRate && (
+                      <span className='badge bg-success-subtle text-success px-3 py-2'>
+                        <i className='bi bi-star me-1'></i>
+                        You can now rate your items
+                      </span>
+                    )}
                   </div>
                   <div className='vstack gap-3'>
                     {order.orderDetails.length > 0 ? (
@@ -176,29 +182,39 @@ function OrderDetailsModal({
                           </div>
 
                           {/* Rating section for completed orders */}
-                          <div className='mt-3 pt-3 border-top bg-light rounded p-3'>
-                            <div className='d-flex align-items-center justify-content-between'>
-                              <div>
-                                <h6 className='mb-1 fw-semibold small text-primary'>
-                                  <i className='bi bi-star me-1'></i>
-                                  Rate this item
-                                </h6>
-                              </div>
-                              <div className='text-end'>
-                                <Rating
-                                  onChange={(rating: number) =>
-                                    handleRatingChange(item.orderDetailId, rating)
-                                  }
-                                  value={
-                                    ratings.find(
-                                      (rating) => rating.orderDetailId === item.orderDetailId,
-                                    )?.rating || 0
-                                  }
-                                  size='medium'
-                                />
+                          {canRate && (
+                            <div className='mt-3 pt-3 border-top bg-light rounded p-3'>
+                              <div className='d-flex align-items-center justify-content-between'>
+                                <div>
+                                  <h6 className='mb-1 fw-semibold small text-primary'>
+                                    <i className='bi bi-star me-1'></i>
+                                    Rate this item
+                                  </h6>
+                                </div>
+                                <div className='text-end'>
+                                  <Rating
+                                    onChange={(rating: number) =>
+                                      handleRatingChange(item.orderDetailId, rating)
+                                    }
+                                    value={
+                                      ratings.find(
+                                        (rating) => rating.orderDetailId === item.orderDetailId,
+                                      )?.rating || 0
+                                    }
+                                    size='medium'
+                                  />
+                                  {(ratings.some((r) => r.orderDetailId === item.orderDetailId) ||
+                                    item.rating > 0) && (
+                                    <div className='mt-1'>
+                                      <small className='text-success'>
+                                        <i className='bi bi-check-circle-fill me-1'></i> Rated
+                                      </small>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       ))
                     ) : (
