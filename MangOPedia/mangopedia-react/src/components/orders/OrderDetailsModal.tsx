@@ -1,7 +1,14 @@
-import type { ChangeEvent, FormEvent } from 'react';
-import type { Order } from '../../store/api/ordersApi';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useUpdateOrderDetailsMutation, type Order } from '../../store/api/ordersApi';
 import { ORDER_STATUS } from '../../utility/constants';
 import { formatDate, getOrderStatusColor } from '../../utility/generalUtility';
+import Rating from '../ui/Rating';
+import { toast } from 'react-toastify';
+
+type RatingTracker = {
+  orderDetailId: number;
+  rating: number;
+};
 
 export type UpdateDataModal = {
   status: string;
@@ -26,7 +33,40 @@ function OrderDetailsModal({
   onUpdateDataChange,
   isAdmin,
 }: Props) {
+  const [updateOrderDetails] = useUpdateOrderDetailsMutation();
+  const initialRatings: RatingTracker[] = [];
+  order?.orderDetails.forEach((od) => {
+    if (od.rating) initialRatings.push({ orderDetailId: od.orderDetailId, rating: od.rating });
+  });
+
+  const [ratings, setRatings] = useState(initialRatings);
   if (!order) return;
+
+  const handleRatingChange = async (orderDetailId: number, newRating: number) => {
+    try {
+      await updateOrderDetails({ orderDetailId: orderDetailId, rating: newRating }).unwrap();
+      const found = ratings.some((r) => r.orderDetailId === orderDetailId);
+      let updatedRatings: RatingTracker[];
+      if (found) {
+        updatedRatings = ratings.map((rating) =>
+          rating.orderDetailId === orderDetailId ? { ...rating, rating: newRating } : rating,
+        );
+      } else {
+        updatedRatings = ratings;
+        updatedRatings.push({ orderDetailId: orderDetailId, rating: newRating });
+      }
+      console.log(updatedRatings);
+
+      setRatings(updatedRatings);
+      toast.success(
+        `Rating of ${newRating} star${newRating !== 1 ? 's' : ''} submitted successfuly`,
+      );
+    } catch (error) {
+      console.error('Error submitting rating', error);
+      toast.error('Failed to submit rating. Please try again');
+    }
+  };
+
   return (
     <>
       <div className='modal-backdrop fade show' />
@@ -147,6 +187,19 @@ function OrderDetailsModal({
                                   Rate this item
                                 </h6>
                               </div>
+                              <div className='text-end'>
+                                <Rating
+                                  onChange={(rating: number) =>
+                                    handleRatingChange(item.orderDetailId, rating)
+                                  }
+                                  value={
+                                    ratings.find(
+                                      (rating) => rating.orderDetailId === item.orderDetailId,
+                                    )?.rating || 0
+                                  }
+                                  size='medium'
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -168,7 +221,6 @@ function OrderDetailsModal({
                     >
                       {isSubmitting ? (
                         <>
-                          {' '}
                           <span
                             className='spinner-border spinner-border-sm me-2'
                             role='status'

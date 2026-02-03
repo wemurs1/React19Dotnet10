@@ -106,6 +106,15 @@ export const ordersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (_result, _error, { orderId }) => [{ type: 'Order', id: orderId }],
     }),
+
+    updateOrderDetails: builder.mutation({
+      query: ({ orderDetailId, rating }) => ({
+        url: `/OrderDetails/${orderDetailId}`,
+        method: 'PUT',
+        body: { orderDetailId: orderDetailId, rating: rating },
+      }),
+      invalidatesTags: ['Order'],
+    }),
   }),
 });
 
@@ -114,4 +123,5 @@ export const {
   useGetOrderByIdQuery,
   useCreateOrderMutation,
   useUpdateOrderMutation,
+  useUpdateOrderDetailsMutation,
 } = ordersApi;
