@@ -113,7 +113,7 @@ export const ordersApi = baseApi.injectEndpoints({
         method: 'PUT',
         body: { orderDetailId: orderDetailId, rating: rating },
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ['Order','MenuItem'],
     }),
   }),
 });

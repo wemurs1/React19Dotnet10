@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../store/store';
 import { addToCart, type CartItemType } from '../store/slice/cartSlice';
 import { toast } from 'react-toastify';
+import Rating from '../components/ui/Rating';
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -146,6 +147,14 @@ function Home() {
                       <span className='badge text-secondary border px-2 py-1 small'>
                         {item.category}
                       </span>
+                      {item.ratings > 0 && (
+                        <div className='d-flex align-items-center'>
+                          <Rating value={item.ratings} size='small' />
+                          <span className='ms-1 text-muted small fw-semibold'>
+                            {item.ratings.toFixed(1)}
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Description */}
