@@ -1,10 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetMenuItemByIdQuery, type MenuItem } from '../../store/api/menuItemApi';
-import { API_BASE_URL } from '../../utility/constants';
+import { API_BASE_URL, ROUTES } from '../../utility/constants';
 import { useState } from 'react';
 import { useAppDispatch } from '../../store/store';
 import { addToCart, type CartItemType } from '../../store/slice/cartSlice';
 import { toast } from 'react-toastify';
+import Rating from '../../components/ui/Rating';
 
 function MenuItemDetails() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ function MenuItemDetails() {
   const selectedMenuItem: MenuItem = data;
   const [quantity, setQuantity] = useState(1);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleAddToCart = () => {
     dispatch(
@@ -66,7 +68,6 @@ function MenuItemDetails() {
 
   return (
     <>
-      {' '}
       <div className='container py-4'>
         {/* Breadcrumb Navigation */}
         <nav aria-label='breadcrumb' className='mb-4'>
@@ -139,6 +140,14 @@ function MenuItemDetails() {
                     </div>
                   </div>
                 </div>
+                {selectedMenuItem.ratings > 0 && (
+                  <div className='d-flex align-items-center'>
+                    <Rating value={selectedMenuItem.ratings} size='small' />
+                    <span className='ms-1 text-muted small fw-semibold'>
+                      {selectedMenuItem.ratings.toFixed(1)}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Description */}
@@ -189,12 +198,18 @@ function MenuItemDetails() {
                       </div>
                       <div className='col-sm-7'>
                         <div className='d-grid gap-2'>
-                          <button className='btn btn-primary btn-lg fw-semibold shadow-sm' onClick={handleAddToCart}>
+                          <button
+                            className='btn btn-primary btn-lg fw-semibold shadow-sm'
+                            onClick={handleAddToCart}
+                          >
                             <i className='bi bi-cart-plus me-2'></i>
                             Add to Cart
                           </button>
 
-                          <button className='btn btn-outline-primary'>
+                          <button
+                            className='btn btn-outline-primary'
+                            onClick={() => navigate(ROUTES.HOME)}
+                          >
                             <i className='bi bi-arrow-left me-2'></i>
                             Continue Shopping
                           </button>
