@@ -6,6 +6,7 @@ import { useAppDispatch } from '../store/store';
 import { addToCart, type CartItemType } from '../store/slice/cartSlice';
 import { toast } from 'react-toastify';
 import Rating from '../components/ui/Rating';
+import Carousel from '../components/ui/Carousel';
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -39,8 +40,9 @@ function Home() {
   });
 
   return (
-    <div className='container-fluid px-0 py-4'>
+    <div className='container-fluid px-0'>
       {/* Hero Section */}
+      <Carousel />
 
       <div className='container' id='menu'>
         {/* Filters */}

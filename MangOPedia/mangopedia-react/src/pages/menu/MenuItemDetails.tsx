@@ -12,7 +12,7 @@ function MenuItemDetails() {
 
   const itemId = parseInt(id!);
   const isValidItemId = !isNaN(itemId) && itemId > 0;
-  const { data, isLoading, error, refetch } = useGetMenuItemByIdQuery(itemId);
+  const { data, isLoading, error } = useGetMenuItemByIdQuery(itemId);
   const selectedMenuItem: MenuItem = data;
   const [quantity, setQuantity] = useState(1);
   const dispatch = useAppDispatch();
