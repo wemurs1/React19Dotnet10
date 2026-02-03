@@ -9,11 +9,11 @@ type Props = {
 };
 
 function RoleBasedRoutes({ children, allowedRoles }: Props) {
-//   const location = useLocation();
+  //   const location = useLocation();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} />;
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location.pathname }} />;
   }
 
   const hasRequiredRole = allowedRoles

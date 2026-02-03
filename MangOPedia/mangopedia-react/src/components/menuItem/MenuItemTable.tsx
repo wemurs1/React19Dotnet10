@@ -83,7 +83,7 @@ function MenuItemTable({ menuItems, isLoading, error, onDelete, onEdit }: Props)
                   <strong>{item.price.toFixed(2)}</strong>
                 </td>
                 <td>
-                  <span className='badge bg-warning text-dark'>{item.specialTag}</span>
+                  <span className='badge bg-warning'>{item.specialTag}</span>
                 </td>
                 <td>
                   <div className='btn-group' role='group'>

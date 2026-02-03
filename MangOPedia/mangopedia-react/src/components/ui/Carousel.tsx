@@ -101,7 +101,7 @@ function Carousel() {
                 <div className='row align-items-center w-100 h-100'>
                   <div className='col-lg-7'>
                     <div className='mb-4'>
-                      <span className='badge bg-gradient bg-warning text-dark fs-6 px-3 py-2 rounded-pill'>
+                      <span className='badge bg-gradient bg-warning fs-6 px-3 py-2 rounded-pill'>
                         <i className='bi bi-fire me-2'></i>Fresh & Hot
                       </span>
                     </div>
@@ -383,7 +383,7 @@ function Carousel() {
                 <div className='row align-items-center w-100 h-100'>
                   <div className='col-lg-7'>
                     <div className='mb-4'>
-                      <span className='badge bg-light text-dark fs-6 px-3 py-2 rounded-pill'>
+                      <span className='badge bg-light fs-6 px-3 py-2 rounded-pill'>
                         <i className='bi bi-chef-hat me-2'></i>Chef's Special
                       </span>
                     </div>
@@ -417,7 +417,7 @@ function Carousel() {
                     <div className='d-flex gap-3 flex-wrap'>
                       <a
                         href='#menu'
-                        className='btn btn-light btn-lg rounded-pill px-5 py-3 text-dark fw-bold shadow-lg'
+                        className='btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg'
                         style={{
                           background: 'linear-gradient(45deg, #ffffff, #f8f9fa)',
                           border: 'none',

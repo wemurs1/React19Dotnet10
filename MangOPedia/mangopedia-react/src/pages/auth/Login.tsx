@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useLoginUserMutation, type LoginRequest } from '../../store/api/authApi';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ROUTES } from '../../utility/constants';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,7 @@ import { getUserInfoFromToken } from '../../utility/jwtUtility';
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState<LoginRequest>({
@@ -38,7 +39,10 @@ function Login() {
         const user = getUserInfoFromToken(token);
         toast.success('Login successful!');
         dispatch(setAuth({ user, token }));
-        navigate(ROUTES.HOME);
+
+        const from = location.state?.from || ROUTES.HOME;
+
+        navigate(from);
       } else {
         toast.error(result.errorMessages?.[0] || 'Login failed');
       }
