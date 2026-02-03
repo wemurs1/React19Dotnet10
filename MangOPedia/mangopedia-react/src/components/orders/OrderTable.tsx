@@ -1,7 +1,7 @@
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import type { SerializedError } from '@reduxjs/toolkit/react';
 import type { Order } from '../../store/api/ordersApi';
-import { formatDate } from '../../utility/generalUtility';
+import { formatDate, getOrderStatusColor } from '../../utility/generalUtility';
 
 type Props = {
   orders: Order[];
@@ -74,7 +74,11 @@ function OrderTable({ orders, isLoading, error, onEdit }: Props) {
                 </td>
                 <td>{order.orderTotal.toFixed(2)}</td>
                 <td>
-                  <span className={`btn btn-small disabled btn-primary`}>{order.status}</span>
+                  <span
+                    className={`btn btn-small disabled btn-${getOrderStatusColor(order.status)}`}
+                  >
+                    {order.status}
+                  </span>
                 </td>
                 <td>
                   <div className='btn-group' role='group'>

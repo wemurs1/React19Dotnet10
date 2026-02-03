@@ -7,9 +7,16 @@ import { useAppSelector } from '../../store/store';
 import { toast } from 'react-toastify';
 
 function OrderManagement() {
-  const { data = [], isLoading, error, refetch } = useGetOrdersQuery('');
-  const orders: Order[] = data;
+  const { user } = useAppSelector((state) => state.auth);
+  const isAdmin = user?.role === ROLES.ADMIN;
 
+  let userId = '';
+  if (!isAdmin && user) {
+    userId = user.id;
+  }
+
+  const { data = [], isLoading, error, refetch } = useGetOrdersQuery(userId);
+  const orders: Order[] = data;
   const [updateOrder] = useUpdateOrderMutation();
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,9 +24,6 @@ function OrderManagement() {
   const [statusFilter, setStatusFilter] = useState('');
   const [searchFilter, setSearchFilter] = useState('');
   const [updateData, setUpdateData] = useState<UpdateDataModal>({ status: '' });
-  const { user } = useAppSelector((state) => state.auth);
-
-  const isAdmin = user?.role === ROLES.ADMIN;
 
   const handleEditOrder = async (order: Order) => {
     setSelectedOrder(order);
@@ -138,6 +142,7 @@ function OrderManagement() {
           onSubmit={handleFormSubmit}
           updateData={updateData}
           onUpdateDataChange={setUpdateData}
+          isAdmin={isAdmin}
         />
       )}
     </div>
