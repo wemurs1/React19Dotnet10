@@ -2,10 +2,30 @@ import { Bounce, ToastContainer } from 'react-toastify';
 import Footer from './components/layout/Footer';
 import Header from './components/layout/Header';
 import AppRoutes from './routes/AppRouter';
+import { useAppSelector } from './store/store';
+import { useEffect } from 'react';
 
 function App() {
+  const theme = useAppSelector((state) => state.theme.theme);
+
+  const getThemeStyles = () => {
+    if (theme === 'dark') {
+      return {
+        background: `linear-gradient(135deg, #434343 0%, #000000 25%, #2d1b69 50%, #11998e 75%, #38ef7d 100%)`,
+      };
+    } else {
+      return {
+        background: `linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #d299c2 50%, #fef9d7 75%, #a8edea 100%)`,
+      };
+    }
+  };
+
+  useEffect(() => {
+    document.body.setAttribute('data-bs-theme', theme);
+  }, [theme]);
+
   return (
-    <div className='d-flex flex-column min-vh-100 bg-body'>
+    <div className='d-flex flex-column min-vh-100 bg-body' style={getThemeStyles()}>
       <Header />
       <main className='flex-grow-1'>
         <AppRoutes />

@@ -25,6 +25,7 @@ export const STORAGE_KEYS = {
   TOKEN: 'token-mango',
   USER: 'user-mango',
   CART: 'cart-mango',
+  THEME: 'theme-mango',
 };
 
 export const ORDER_STATUS = {
