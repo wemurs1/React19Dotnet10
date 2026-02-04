@@ -13,7 +13,7 @@ function RoleBasedRoutes({ children, allowedRoles }: Props) {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} state={{ from: location.pathname }} />;
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location.pathname }} replace />;
   }
 
   const hasRequiredRole = allowedRoles

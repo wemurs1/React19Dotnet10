@@ -17,7 +17,14 @@ const AppRoutes = () => (
     <Route path={ROUTES.LOGIN} element={<Login />} />
     <Route path={ROUTES.REGISTER} element={<Register />} />
     <Route path={ROUTES.MENU_DETAIL} element={<MenuItemDetails />} />
-    <Route path={ROUTES.ORDER_MANAGEMENT} element={<OrderManagement />} />
+    <Route
+      path={ROUTES.ORDER_MANAGEMENT}
+      element={
+        <RoleBasedRoutes>
+          <OrderManagement />
+        </RoleBasedRoutes>
+      }
+    />
     <Route
       path={ROUTES.MENU_MANAGEMENT}
       element={
